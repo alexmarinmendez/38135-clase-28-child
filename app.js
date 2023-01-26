@@ -1,6 +1,6 @@
-//version bloqueante!!!
+//version child_process!!!
 import express from 'express'
-import { suma } from './suma.js'
+import { fork } from 'child_process'
 
 let counter = 0
 const app = express()
@@ -13,6 +13,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/matematica', (req, res) => {
-    const result = suma()
-    res.send(`Resultado = ${result}`)
+    const result = fork('suma')
+    result.on('message', data => {
+        res.send(`Resultado = ${data}`)
+    })
 })
